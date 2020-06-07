@@ -1,0 +1,40 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+archivesBaseName = 'ap.common.services'
+version = (System.getenv("BUILD_NUMBER") ?: "1.0") + "_" + (new Date()).format("yyDDD")
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    //
+    // JSON
+    //
+    implementation 'com.google.code.gson:gson:+'
+    implementation 'com.fasterxml.jackson.core:jackson-core:+'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:+'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:+'
+
+    //
+    // Platform
+    //
+    implementation 'io.vertx:vertx-core:3+'
+    implementation 'io.vertx:vertx-web:3+'
+    implementation 'io.vertx:vertx-dropwizard-metrics:3+'
+    implementation 'io.vertx:vertx-codegen:3+'
+    implementation 'org.sharegov:mjson:+'
+    implementation 'org.bouncycastle:bc-fips:1.0.2'
+    implementation 'org.bouncycastle:bcpkix-fips:1.0.3'
+
+    //
+    // Service
+    //
+    implementation 'com.auth0:java-jwt:+'
+}
+
+task copyToLibs(type: Copy) {
+    into "$buildDir/libs"
+    from configurations.runtimeClasspath
+}

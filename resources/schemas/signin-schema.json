@@ -1,0 +1,19 @@
+{
+    "title": "Signin Schema",
+    "type": "object",
+    "schemaVersion": "1.0",
+    "properties": {
+        "user": {
+            "type": "string",
+            "format": "email"
+        },
+        "password": {
+            "type": "string",
+            "pattern": "^((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\\x20-\\x27|\\x3A-\\x40|\\x5C-\\x60|\\x7B-\\x7E]).{8,128})$"
+        }
+    },
+    "required": [
+        "user",
+        "password"
+    ]
+}

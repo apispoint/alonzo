@@ -1,0 +1,12 @@
+{
+    "ap.bls:bse": "com.apispoint.platform.service.common.CountryCodes",
+    "host": "0.0.0.0",
+    "port": 9191,
+    "base": "v1",
+    "cors": {},
+    "methods": {
+        "get": [
+            "countries/"
+        ]
+    }
+}

@@ -1,0 +1,20 @@
+{
+    "ap.bls:bse": "com.apispoint.service.ServiceTest",
+    "host": "0.0.0.0",
+    "port": 8484,
+    "base": "v1",
+    "cors": {
+        "credentials": false,
+        "origin": "*",
+        "methods": ["PUT"],
+        "headers": ["Origin", "Authorization"]
+    },
+    "methods": {
+        "put": [
+            "/"
+        ],
+        "get": [
+            "/"
+        ]
+    }
+}

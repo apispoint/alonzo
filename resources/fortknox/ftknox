@@ -1,0 +1,114 @@
+#!/bin/bash
+
+#
+# Copyright APIS Point, LLC or its affiliates. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License").
+# You may not use this file except in compliance with the License.
+# A copy of the License is located at
+#
+#  http://www.apache.org/licenses/LICENSE-2.0
+#
+# or in the "license" file accompanying this file. This file is distributed
+# on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+# express or implied. See the License for the specific language governing
+# permissions and limitations under the License.
+#
+
+hash aws &>/dev/null || {
+  (>&2 echo 'Error: AWS CLI not found on PATH');
+  exit 1;
+}
+
+function usage {
+    echo 'Usage:' $(basename "$0") '[-r | --region <aws_region>] [-t | --table <ddb_table>] [-a | --alias <kms_alias>] [config] [put <key> <secret>] [[get | del] <key>]'
+}
+
+function initialize {
+    REGION=${region:-us-east-1}
+    TABLE=${table:-ap.ftknox-vault}
+    ALIAS=${alias:-alias/ap/ftknox}
+}
+
+function cfg {
+    kms_key_id=$(aws kms create-key --output text --query KeyMetadata.KeyId --region $REGION)
+    aws kms create-alias --alias-name $ALIAS --target-key-id $kms_key_id --region $REGION
+    aws kms enable-key-rotation --key-id $kms_key_id --region $REGION
+
+    aws dynamodb create-table --table-name $TABLE --key-schema AttributeName=key,KeyType=HASH --attribute-definitions AttributeName=key,AttributeType=S --provisioned-throughput ReadCapacityUnits=1,WriteCapacityUnits=1 --region $REGION
+
+    echo "\n\nFort Knox ready"
+}
+
+function put {
+    contents=$(aws kms encrypt --region $REGION --key-id $ALIAS --output text --query CiphertextBlob --plaintext $2)
+    aws dynamodb put-item --region $REGION --table-name $TABLE --item '{"key": {"S": "'${1}'"}, "contents":{"S": "'${contents}'"}}'
+}
+
+function get {
+    tmp=$(mktemp)
+    aws dynamodb get-item --region $REGION --table-name $TABLE --key '{"key": {"S":"'${1}'"}}' --output text --query Item.contents.S | base64 --decode > $tmp
+    aws kms decrypt --region $REGION --ciphertext-blob fileb://$tmp --output text --query Plaintext | base64 --decode
+    rm $tmp
+}
+
+function del {
+    aws dynamodb delete-item --table-name $TABLE --key '{"key": {"S":"'${1}'"}}' --region $REGION
+}
+
+while [[ $# -gt 0 ]]
+do
+key="$1"
+
+case $key in
+    -r|--region)
+    region="$2"
+    shift # past argument
+    shift # past value
+    ;;
+    -t|--table)
+    table="$2"
+    shift # past argument
+    shift # past value
+    ;;
+    -a|--alias)
+    alias="$2"
+    shift # past argument
+    shift # past value
+    ;;
+    configure)
+    cfg=1
+    shift # past argument
+    ;;
+    put)
+    put=1
+    pargs="$2 $3"
+    shift # past argument
+    shift # past value
+    shift # past value
+    ;;
+    get)
+    get=1
+    gargs="$2"
+    shift # past argument
+    shift # past value
+    ;;
+    del)
+    del=1
+    dargs="$2"
+    shift # past argument
+    shift # past value
+    ;;
+    -?|--help|*)
+    usage
+    exit 1
+    ;;
+esac
+done
+
+initialize
+
+[ "$cfg" ] && cfg
+[ "$put" ] && put $pargs
+[ "$get" ] && get $gargs
+[ "$del" ] && del $dargs

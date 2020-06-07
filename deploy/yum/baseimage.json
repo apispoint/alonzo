@@ -1,0 +1,37 @@
+{
+    "variables": {
+        "region": "",
+        "ami-id": "",
+        "role": "",
+        "ssh-sg": ""
+    },
+    "builders": [
+        {
+            "type": "amazon-ebs",
+            "region": "{{user `region`}}",
+            "source_ami": "{{user `ami-id`}}",
+            "instance_type": "t2.micro",
+            "iam_instance_profile": "{{user `role`}}",
+            "ssh_username": "{{user `ssh-user`}}",
+            "ami_name": "ap-common-base-L2 {{isotime \"2006-01-02\"}}",
+            "ssh_timeout": "10m",
+            "security_group_ids": [
+                "{{user `ssh-sg`}}"
+            ]
+        }
+    ],
+    "provisioners": [
+        {
+            "type": "shell",
+            "scripts": [
+                "update.sh",
+                "java.sh",
+                "vertx.sh",
+                "jq.sh",
+                "fortknox.sh",
+                "laker.sh",
+                "bls.sh"
+            ]
+        }
+    ]
+}

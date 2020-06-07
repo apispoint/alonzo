@@ -1,0 +1,11 @@
+[Unit]
+Description=DO NOT MODIFY -- MACHINE GENERATED Bootstrap Loading Service [ap.bls::service={{name}}]
+Requires=network-online.target
+After=network-online.target
+
+[Service]
+Restart=on-failure
+ExecStart=/opt/{{domain}}/{{name}}/{{name}}.sh
+
+[Install]
+WantedBy=multi-user.target

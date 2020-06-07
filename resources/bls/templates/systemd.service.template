@@ -1,0 +1,11 @@
+[Unit]
+Description=DO NOT MODIFY -- MACHINE GENERATED [ap.bls::service={{name}}]
+Requires=network-online.target
+After=network-online.target
+
+[Service]
+Restart=on-failure
+ExecStart=/opt/{{domain}}/service/{{name}}/{{name}}.sh
+
+[Install]
+WantedBy=multi-user.target

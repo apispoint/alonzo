@@ -1,0 +1,33 @@
+{
+    "ap.bls:bse": "com.apispoint.platform.service.provision.User",
+    "host": "0.0.0.0",
+    "port": 8989,
+    "base": "v1",
+    "cors": {},
+    "methods": {
+        "get": [
+            "provision/config/users/"
+        ],
+        "put": [
+            "provision/config/users/"
+        ]
+    },
+    "authorization": [
+        "get",
+        "put"
+    ],
+    "authPasswd": "env:AP_AUTH_PASSWD",
+    "service_init": {
+        "injectable": [{
+            "mapkey": "collection",
+            "injectablekey": "aws-database-dynamo",
+            "init": {
+                "region": "",
+                "table": "",
+                "capacity_r": 1,
+                "capacity_w": 1,
+                "indexField": "S/uuid"
+            }
+        }]
+    }
+}

@@ -1,0 +1,13 @@
+{
+    "ap.bls:bse": "com.apispoint.platform.service.common.Timezone",
+    "host": "0.0.0.0",
+    "port": 8484,
+    "base": "v1",
+    "cors": {},
+    "methods": {
+        "get": [
+            "timezones/",
+            "timezones/:id/?"
+        ]
+    }
+}

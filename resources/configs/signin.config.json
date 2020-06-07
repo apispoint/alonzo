@@ -1,0 +1,47 @@
+{
+    "ap.bls:bse": "com.apispoint.platform.service.provision.Signin",
+    "host": "0.0.0.0",
+    "port": 8787,
+    "base": "v1",
+    "cors": {},
+    "methods": {
+        "post": [
+            "provision/users/"
+        ],
+        "put": [
+            "provision/users/"
+        ]
+    },
+    "authorization": [
+        "put"
+    ],
+    "authPasswd": "env:AP_AUTH_PASSWD",
+    "authPeriod": 15,
+    "authIssuer": "avant-garde",
+    "schema": "file:/opt/apispoint/service/signin/signin-schema.json",
+    "service_init": {
+        "mfa_label": "avant-garde",
+        "mfa_issuer": "avant-garde",
+        "injectable": [{
+            "mapkey": "collection",
+            "injectablekey": "aws-database-dynamo",
+            "init": {
+                "region": "",
+                "table": "",
+                "capacity_r": 1,
+                "capacity_w": 1,
+                "indexField": "S/uuid",
+                "additionalIndices": [
+                    "user:S/user"
+                ]
+            }
+        }, {
+            "mapkey": "mfa-kms",
+            "injectablekey": "aws-storage-kms",
+            "init": {
+                "region": "",
+                "alias": ""
+            }
+        }]
+    }
+}

@@ -1,0 +1,42 @@
+#!/bin/bash
+
+###
+### DO NOT MODIFY -- MACHINE GENERATED [ap.bls::service={{name}}]
+###
+
+export AP_BLS_DOMAIN={{domain}}
+export AP_BLS_SERVICE_NAME={{name}}
+export AP_BLS_SERVICE_REPO={{servicerepo}}
+
+export AP_HOME=/opt/$AP_BLS_DOMAIN
+export AP_HOME_VERTX=$AP_HOME/vertx
+export AP_HOME_SERVICE=$AP_HOME/service
+
+export SERVICE_HOME=$AP_HOME_SERVICE/$AP_BLS_SERVICE_NAME
+export SERVICE_CONF=$SERVICE_HOME/$AP_BLS_SERVICE_NAME.config.json
+export SERVICE_LOG=$SERVICE_HOME/$AP_BLS_SERVICE_NAME.log
+
+array=( "$SERVICE_HOME/initialize-authpasswd.sh" "$SERVICE_HOME/initialize.sh" )
+for file in "${array[@]}"
+do
+   if [ -f $file ]; then
+      . $file
+   else
+      echo "$file nonexistent, bypassing...."
+   fi
+done
+
+LIB=$SERVICE_HOME
+CLASSPATH=$(JARS=("$LIB"/*.jar); IFS=:; echo "${JARS[*]}")
+
+CLASSPATH+=:
+
+LIB=$AP_HOME_VERTX/lib
+CLASSPATH+=$(JARS=("$LIB"/*.jar); IFS=:; echo "${JARS[*]}")
+
+export CLASSPATH=$CLASSPATH
+
+region=$(wget -q -O - http://169.254.169.254/latest/meta-data/placement/availability-zone | sed 's/.$//')
+aws s3 sync --quiet $AP_BLS_SERVICE_REPO $SERVICE_HOME --region $region
+
+java -Xmx256M $JAVA_OPTS com.apispoint.service.ServiceLauncher $SERVICE_CONF `nproc` 2>&1 | sudo tee $SERVICE_LOG
