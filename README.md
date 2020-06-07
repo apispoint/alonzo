@@ -1,22 +1,23 @@
 # alonzo
 Function as a Service (FaaS) Platform for Vert.x on EC2
 
-Alonzo is AWS Lambda before there was an AWS Lambda. The platform was initially
-developed in 2013!
-
 This code is being released to the open source software (OSS) community because
 it’s no longer used in our production projects. Rather than nuke the code we
-opted to release it so it could help others in some way, shape, or form.
+opted to release it so others could benefit from it in some way, shape, or form.
 
-Believe it or not the team ported all of our Alonzo based services to AWS
-Lambda in less than 6 weeks. A testament to the framework!
+Alonzo is a Java and Vert.x based platform designed to deploy microservices on
+AWS EC2. The platform was initially developed in 2013 so it pre-dates AWS Lambda
+by one (1) year.
+
+On another note, the team ported all of our Alonzo based services to AWS Lambda
+in less than 6 weeks. A testament to the framework!
 
 You're probably thinking, if Alonzo was so good; why did we migrate to Lambda?
 
-That’s simple... Tech debt was adding up, server maintenance was adding up, and
-we thought it was time to streamline operations and cost. We also had some much
-needed Java code housekeeping to do. We had a mix of Java 6 to Java 11 code
-peppered around everywhere.
+Well, it wasn't so much Alonzo or Lambda question. After 7 years tech debt was
+adding up, server maintenance was adding up, and we had some much needed Java
+code housekeeping that needed to be done. It just made sense to move forward
+in a new but familar way.
 
 Alonzo component dependencies:
 
