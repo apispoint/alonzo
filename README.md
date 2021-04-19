@@ -14,10 +14,10 @@ in less than 6 weeks. A testament to the framework!
 
 You're probably thinking, if Alonzo was so good; why did we migrate to Lambda?
 
-Well, it wasn't so much Alonzo or Lambda question. After 7 years tech debt was
-adding up, server maintenance was adding up, and we had some much needed Java
-code housekeeping that needed to be done. It just made sense to move forward
-in a new but familar way.
+Well, it wasn't so much an Alonzo or Lambda question. After 7 years tech debt
+and server maintenance was adding up, and we had some much needed Java code
+housekeeping that needed to be done. It just made sense to move forward in a
+new but familar way.
 
 Alonzo component dependencies:
 
